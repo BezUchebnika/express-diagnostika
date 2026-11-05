@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Экспресс-диагностика</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Экспресс-диагностика BezUchebnika: 10 тем английского за 4 минуты, в формате сообщения из поездки.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans+Extra+Condensed:wght@700;800;900&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Один тёмный мир, как тренажёр на have: тёмная шапка, вопрос на светлой карточке, финал с голубым этажом */
+:root{
+  --bg:#111111; --surface:#1A1B1E; --surface-2:#232529; --line:#34373D;
+  --fg:#F2F0EC; --muted:#9A978F; --accent:#85B7EB; --accent-ink:#0D1824;
+  --paper:#ECE9E2; --paper-fg:#141414; --paper-muted:#6A675F; --paper-line:#C9C4B8;
+  --g:#9FD3AA; --y:#E9CF8A; --r:#EBA79C;
+  --display:'Fira Sans Extra Condensed','Arial Narrow',Arial,sans-serif;
+  --body:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.in{max-width:720px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.d{font-family:var(--display);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:.005em}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit}
+.hl{color:var(--accent)}
+.top{display:flex;justify-content:flex-end;padding-top:28px}
+.toplink{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.toplink:hover,.toplink:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+
+.screen{display:grid;gap:26px;padding-block:28px 64px}
+.screen>*{min-width:0}
+
+/* старт */
+.hero h1{font-size:clamp(52px,14vw,112px)}
+.hero h1 .hl{display:block}
+.lead{font-size:19px;max-width:30em;margin-top:18px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px}
+.facts span{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;display:flex;align-items:baseline;gap:6px}
+.facts b{color:var(--accent);font-weight:900;font-size:30px}
+
+/* блоки тем в финале */
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.tile{background:var(--surface);border:1.5px solid var(--line);padding:10px 10px 12px;display:grid;gap:4px;align-content:start;min-height:84px;transition:background .35s,border-color .35s,color .35s}
+.tile .n{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tile .t{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.05;text-transform:uppercase}
+.tile .s{font-size:13px;font-weight:600}
+.tile{font:inherit;text-align:left;cursor:pointer;color:var(--fg)}
+.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tile.sel{outline:3px solid var(--fg);outline-offset:2px}
+.tinfo{background:var(--surface);padding:14px 16px;display:grid;gap:4px}
+.tinfo b{font-weight:600;font-size:18px}
+.tinfo p{font-size:16px;color:var(--muted);line-height:1.5}
+.start{font-size:17px!important;color:var(--muted)}
+.start b{color:var(--fg);font-weight:600}
+.tile.g{background:var(--g);border-color:var(--g);color:#10301A}
+.tile.y{background:var(--y);border-color:var(--y);color:#3A2C08}
+.tile.r{background:var(--r);border-color:var(--r);color:#4A150C}
+.tile.g .n,.tile.y .n,.tile.r .n{color:inherit;opacity:.7}
+@media (max-width:560px){.map{grid-template-columns:1fr 1fr}.tile{min-height:0}}
+
+.btn{font-weight:600;font-size:17px;padding:15px 22px;cursor:pointer;border:1.5px solid var(--fg);background:transparent;color:var(--fg);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.big{font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase;padding:14px 28px}
+.btn.dark{background:#141414;border-color:#141414;color:#F2F0EC}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* прохождение */
+.strip{display:flex;gap:4px}
+.strip i{flex:1;height:8px;background:var(--surface-2);transition:background .3s}
+.strip i.cur{background:var(--fg)}
+.strip i.g{background:var(--g)} .strip i.y{background:var(--y)} .strip i.r{background:var(--r)}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.qtopic{font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;line-height:1.1}
+.card{background:var(--paper);color:var(--paper-fg);padding:24px 18px 22px;display:grid;gap:18px}
+.card>*{min-width:0}
+.card .mono{color:var(--paper-muted)}
+.story{display:grid;gap:14px;font-size:20px;line-height:1.6;color:var(--muted)}
+.story p{max-width:34em}
+.story b{color:var(--fg);font-weight:600}
+.story .now{color:var(--fg)}
+.story.full{font-size:17px;line-height:1.7;color:var(--fg);background:var(--surface);padding:18px}
+.story.full b.ok{color:var(--g)} .story.full b.no{color:var(--r);text-decoration:underline;text-underline-offset:3px}
+.gap{display:inline-block;min-width:3.2em;border-bottom:3px solid var(--accent);padding:0 4px;line-height:1.2;color:var(--fg)}
+.gap.ok,.gap.no{background:#D3E7D6;border-color:#4E8B5E;color:#163A20;font-weight:600}
+.qru{font-family:var(--display);font-weight:800;font-size:clamp(32px,8.5vw,46px);line-height:1.08;text-transform:uppercase}
+.ctx{font-size:18px;font-weight:500;color:var(--paper-fg)}
+.opts{display:grid;gap:8px}
+.opt{font-weight:600;font-size:19px;text-align:left;padding:15px 14px;cursor:pointer;border:1.5px solid var(--paper-line);background:#FFFFFF;color:var(--paper-fg);line-height:1.3}
+.opt:hover{border-color:var(--paper-fg)}
+.opt:focus-visible{outline:2px solid #2F6EAD;outline-offset:2px}
+.opt.right{background:#D3E7D6;border-color:#4E8B5E;color:#163A20}
+.opt.wrong{background:#F1D6D0;border-color:#B5594A;color:#5C1D12}
+.opt[disabled]{cursor:default}
+.fb{display:grid;gap:6px;border-top:1px solid var(--paper-line);padding-top:14px}
+.fbl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.fb.ok .fbl{color:#2E7D47} .fb.no .fbl{color:#B24A3A}
+.fb p{font-size:17px;line-height:1.5}
+.fb .btn{justify-self:start;margin-top:6px}
+
+/* середина */
+.half{min-height:60vh;align-content:center;cursor:pointer}
+.half h2{font-size:clamp(56px,15vw,120px)}
+.half h2 .hl{display:block}
+.half p{font-size:19px;color:var(--muted)}
+
+/* результат */
+.rtype{display:grid;gap:14px}
+.rtype h1{font-size:clamp(46px,12vw,92px)}
+.rtype p{font-size:19px;max-width:32em}
+.zones{display:grid;border-top:1px solid var(--line)}
+.zone{display:grid;grid-template-columns:14px 1fr;gap:4px 14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.zone .dot{width:14px;height:14px;margin-top:6px}
+.zone .dot.y{background:var(--y)} .zone .dot.r{background:var(--r)}
+.zone b{font-weight:600;font-size:18px}
+.zone b small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-left:6px}
+.zone p{grid-column:2;font-size:15px;color:var(--muted);line-height:1.5}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;display:inline-block}
+.course{display:grid;gap:14px;justify-items:start;font-size:18px;color:var(--accent);max-width:34em}
+.course .btn{border-color:var(--accent);color:var(--accent);font-size:16px;padding:12px 18px}
+.taphint{font-size:17px;color:var(--fg)}
+.course b{color:var(--fg);font-weight:600}
+
+.cta{background:var(--accent);color:var(--accent-ink);padding-block:44px 56px}
+.screen.res{padding-bottom:28px}
+.sect{font-size:clamp(30px,8vw,40px);color:var(--accent);margin-top:10px}
+.tinfo{scroll-margin-bottom:16px}
+.cta .in{display:grid;gap:16px}
+.cta h2{font-size:clamp(36px,9.5vw,54px)}
+.cta p{max-width:32em}
+.cta .btn.primary{background:#111111;border-color:#111111;color:#85B7EB;justify-self:start}
+.cta .hint{font-size:14px}
+.more{padding-block:40px 64px}
+.more .in{display:grid;gap:14px}
+.more a.vid{display:grid;gap:8px;text-decoration:none;background:var(--surface);color:var(--fg);padding:20px 18px;border:1.5px solid var(--line)}
+.more a.vid:hover,.more a.vid:focus-visible{border-color:var(--accent);outline:none}
+.more .vt{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(26px,7vw,34px);line-height:1.05}
+.more .go{color:var(--accent);font-weight:600;font-size:15px}
+.more .row{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+.link{color:var(--accent);font-weight:600}
+.again{background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0;font-size:15px}
+
+@media (prefers-reduced-motion:no-preference){
+  .pop{animation:pop .35s ease-out}
+  @keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+  .fade{animation:fade .3s ease-out both}
+  @keyframes fade{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="in"><div class="top"><a class="mono toplink" href="https://t.me/BezUchebnika" target="_blank" rel="noopener">BezUchebnika ↗</a></div></div>
+<main id="app"></main>
+
+<script>
+/* Ссылки */
+const ARTEM = 'https://t.me/ArtemEnglishLessons';
+const VIDEO = 'https://youtu.be/pyc2yslEo9Q';
+const CHANNEL = 'https://t.me/BezUchebnika';
+
+/* Темы: урок, короткое имя, текст для жёлтой/красной зоны */
+const S = [
+ {n:'Урок 1', t:'To be', name:'To be и порядок слов', z:'Где нужен am, is, are, а где обычный глагол. Отсюда I am work и I tired, самая частая ловушка дословного перевода.'},
+ {n:'Урок 2', t:'Вопросы', name:'Отрицания и вопросы', z:'Когда нужны do и does, а когда am, is, are. Отсюда She isn\'t speak и Where do you from?'},
+ {n:'Урок 3', t:'Глаголы, союзы', name:'Глаголы и союзы', z:'Самые нужные глаголы, слова-заглушки на случай, если забыли слово, и союзы so, because.'},
+ {n:'Урок 4', t:'Модальные', name:'Модальные глаголы', z:'Can, should, have to, must. Как вежливо попросить и посоветовать, и почему после этих слов не ставится to.'},
+ {n:'Урок 5', t:'Continuous', name:'Present Continuous', z:'Что происходит прямо сейчас, а что бывает всегда. Are sitting или sit.'},
+ {n:'Урок 6', t:'Предлоги', name:'Предлоги и there is', z:'Предлоги in, on, at и there is. Как сказать, где что находится и что где есть.'},
+ {n:'Урок 7', t:'Местоимения', name:'Местоимения и количество', z:'Much или many, anybody или nobody. И почему в английском в предложении одно отрицание: I don\'t know anybody.'},
+ {n:'Урок 8', t:'Будущее', name:'Будущее время', z:'Going to для планов и will для решений, которые вы принимаете прямо в моменте.'},
+ {n:'Урок 9', t:'Прошедшее', name:'Прошедшее время', z:'Arrived, went, wasn\'t. Как рассказать о том, что уже было, и не перепутать was с did.'},
+ {n:'Урок 10', t:'Present Perfect', name:'Present Perfect', z:'Have been, have you ever. Как говорить об опыте и о том, что связано с сегодняшним днём.'}
+];
+
+/* История: [абзац, тема, по-русски, по-английски с ___, правильно, неправильно, неправильно, почему] */
+const G = [
+ [0,0,'Мы в Барселоне!','We ___ in Barcelona!','are','is','am','С we всегда are.'],
+ [0,8,'Мы прилетели в понедельник.','We ___ on Monday.','arrived','have arrived','were arrived','В понедельник это простой факт в прошлом, без связи с сегодняшним днём. Поэтому arrived, без have и were.'],
+ [0,8,'Самолёт не опоздал.','The plane ___ late.','wasn\'t','didn\'t','don\'t','Late значит «поздний», это не глагол. Поэтому «не опоздал» это «не был поздним»: wasn\'t late.'],
+ [0,6,'Мы пока никого здесь не знаем, но все очень дружелюбные.','We don\'t know ___ here yet, but everyone is very friendly.','anybody','nobody','somebody','В английском одно отрицание на предложение. Don\'t уже есть, поэтому anybody.'],
+ [1,9,'Мы здесь уже три дня, и нам всё нравится.','We ___ here for three days, and we love everything.','\'ve been','are','were','Мы здесь до сих пор, это связь с сегодняшним днём. Поэтому have been.'],
+ [1,5,'Отель отличный: на крыше есть бассейн.','The hotel is great: ___ a pool on the roof.','there\'s','is','it\'s','Если говорим, что где-то что-то есть, начинаем с there is.'],
+ [1,6,'Номер у нас маленький, и места мало,','Our room is small, and there isn\'t ___ space,','much','many','lot','Место не посчитать штуками, поэтому much.'],
+ [1,5,'зато он на пятом этаже, и вид потрясающий.','but it\'s ___ the fifth floor, and the view is amazing.','on','in','at','Этаж всегда с on.'],
+ [1,0,'Каждое утро мы гуляем у моря.','Every morning we ___ by the sea.','walk','are walk','are walking','Каждое утро, это регулярное действие. Are здесь не нужен, просто walk.'],
+ [2,4,'Сейчас мы сидим в маленьком кафе.','Right now we ___ in a little café.','are sitting','sit','are sit','Это происходит прямо сейчас, поэтому are sitting.'],
+ [2,4,'Официант работает здесь каждое лето.','The waiter ___ here every summer.','works','is working','work','Каждое лето, это регулярно. Поэтому works, и с he на конце -s.'],
+ [2,1,'Он не говорит по-русски,','He ___ speak Russian,','doesn\'t','don\'t','isn\'t','С he отрицание через does: doesn\'t speak.'],
+ [2,1,'но спрашивает: «Откуда вы?»','but he asks: «Where ___ you from?»','are','do','is','В вопросе нет действия, есть только «быть откуда-то». Поэтому are.'],
+ [2,9,'Потом он спрашивает: «Вы когда-нибудь были в Испании?»','Then he asks: «___ you ever been to Spain?»','Have','Did','Are','Вопрос про опыт за всю жизнь, со словом ever. Поэтому have.'],
+ [2,3,'А мы спрашиваем: «Можно нам меню?»','And we ask: «___»','Can we have the menu, please?','Can we take the menu, please?','Give us the menu, please.','В кафе просят через Can we have…? Take значит «забрать», а give us звучит как требование.'],
+ [2,3,'Он советует: «Вам стоит попробовать паэлью».','He says: «You should ___ the paella».','try','to try','trying','После should глагол идёт без to.'],
+ [2,2,'Мы забыли слово «салфетки» и просим: «Можно нам что-нибудь, чтобы вытереть руки?»','We forgot the word for napkins, so we ask: «Can we have ___ clean our hands?»','something to','something for','thing what','Если забыли слово, опишите его: something to clean, «что-нибудь, чтобы вытереть».'],
+ [3,2,'Паэлья очень вкусная, поэтому мы придём ещё раз.','The paella is delicious, ___ we\'re going to come back.','so','because','but','«Поэтому» это so, а because значит «потому что».'],
+ [3,7,'Завтра мы пойдём в музей Пикассо, это уже план.','Tomorrow we ___ visit the Picasso Museum.','are going to','going to','will to','Это план, а для планов going to. И без are не обойтись.'],
+ [3,7,'Я пришлю тебе фото!','I ___ you photos!','\'ll send','will to send','send','Решили прямо сейчас, поэтому will. После will глагол без to.']
+];
+
+/* Где стоит правильный ответ: поровну по всем трём местам, не больше двух раз подряд на одном месте */
+function positions(n){
+  for(;;){
+    const p=[]; for(let i=0;i<n;i++) p.push(i%3);
+    for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}
+    if(!p.some((x,i)=>i>1&&x===p[i-1]&&x===p[i-2])) return p;
+  }
+}
+let POS=positions(G.length);
+
+/* Типы результата */
+const TYPES = {
+ almost:{h:'Почти готовая <span class="hl">система</span>',
+  p:'Основа у вас собрана, и это заметно. Осталось закрыть пару тем, чтобы перестать сомневаться в мелочах.',
+  s:'с тем, которые подсвечены жёлтым и красным. Их немного, и закрыть их можно быстро.'},
+ speech:{h:'Крепкий фундамент, <span class="hl">но речь буксует</span>',
+  p:'База у вас есть: to be и вопросы держатся. Поэтому в голове всё понятно, а вслух получается медленно и с запинками.',
+  s:'с тем, которые подсвечены красным. На курсе они встраиваются в то, что вы уже знаете.'},
+ tenses:{h:'Знаете слова, <span class="hl">но путаетесь во временах</span>',
+  p:'Слова и базовые конструкции у вас есть. Сбой происходит, когда нужно выбрать время: сейчас, вчера или завтра.',
+  s:'с того, когда какое время нужно. На курсе это уроки 5, 8, 9 и 10, и они идут как одна система.'},
+ literal:{h:'Английские слова, <span class="hl">но русский порядок</span>',
+  p:'Слова вы знаете, но собираете предложение так, как собрали бы его на русском. Отсюда I am work и She isn\'t speak.',
+  s:'с порядка слов и to be. Это первые уроки курса, и после них уходит большая часть ошибок.'},
+ pieces:{h:'Детали есть, <span class="hl">системы пока нет</span>',
+  p:'Что-то из английского вы уже знаете, но знания лежат отдельными кусочками.',
+  s:'с to be и порядка слов. На этом держится всё остальное, и дальше темы ложатся одна на другую.'}
+};
+const WORD = {g:'работает', y:'шатается', r:'дыра'};
+const HALF = G.length/2;
+
+/* Счётчик GoatCounter: работает, когда страница лежит на GitHub Pages; в Claude-ссылке молчит */
+/* Источник берётся из ссылки: ?utm_source=instagram, telegram, youtube. Без метки: direct */
+let SRC='direct'; try{ const v=new URLSearchParams(location.search).get('utm_source'); if(v) SRC=v.toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,20)||'direct'; }catch(e){}
+const BY_SRC={start:1,finish:1,ask:1,course:1,video:1,channel:1};
+function send(p){ try{ if(window.goatcounter && window.goatcounter.count) window.goatcounter.count({path:p, title:p, event:true}); }catch(e){} }
+function track(path){ send('diag-'+path); if(BY_SRC[path]) send('diag-'+path+'-'+SRC); }
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const app = document.getElementById('app');
+let gi=0, ans=[], picks=[], res=[], busy=false, timer=null;
+
+function stripHTML(){
+  return '<div class="strip">'+G.map((_,i)=>`<i class="${ans[i]===true?'g':ans[i]===false?'r':(i===gi?'cur':'')}"></i>`).join('')+'</div>';
+}
+
+function start(){
+  clearTimeout(timer);
+  window.scrollTo(0,0);
+  app.innerHTML = `<section class="in screen fade">
+    <div class="hero">
+      <h1 class="d">Экспресс-<span class="hl">диагностика</span></h1>
+      <p class="lead">Вставьте пропущенные слова в короткую историю о поездке. Так проверим основу английского по ${S.length} темам.</p>
+    </div>
+    <div class="facts"><span><b>4</b> минуты</span><span><b>${S.length}</b> тем</span></div>
+    <div><button class="btn primary big" id="go">Начать</button></div>
+  </section>`;
+  document.getElementById('go').onclick=()=>{ gi=0; ans=[]; picks=[]; res=[]; POS=positions(G.length); track('start'); ask(); };
+}
+
+function storyHTML(upto, done){
+  const paras=[[],[],[],[]];
+  G.forEach((g,i)=>{
+    if(i>upto) return;
+    let t=esc(g[3]);
+    if(i<upto || done) t=t.replace('___','<b class="'+(done?(ans[i]?'ok':'no'):'')+'">'+esc(g[4])+'</b>');
+    else t=t.replace('___','<span class="gap" id="gap">&nbsp;</span>');
+    paras[g[0]].push(i===upto&&!done?'<span class="now">'+t+'</span>':t);
+  });
+  return paras.filter(p=>p.length).map(p=>'<p>'+p.join(' ')+'</p>').join('');
+}
+
+function fitCard(){
+  const c=document.getElementById('card'), gp=document.getElementById('gap'); if(!c) return;
+  const r=c.getBoundingClientRect(), H=window.innerHeight;
+  if(r.bottom>H-12){
+    let dy=r.bottom-H+16;
+    if(gp){ const gt=gp.getBoundingClientRect().top-12; if(dy>gt) dy=gt; }
+    window.scrollBy(0,dy);
+  }
+}
+
+function ask(){
+  clearTimeout(timer);
+  const g=G[gi];
+  const wrong=shuffle([g[5],g[6]]); const opts=wrong.slice(); opts.splice(POS[gi],0,g[4]);
+  app.innerHTML = `<section class="in screen">
+    <div style="display:grid;gap:12px">
+      ${stripHTML()}
+      <div class="qhead"><span class="mono">Привет из Барселоны!</span><span class="mono">${gi+1} из ${G.length}</span></div>
+    </div>
+    <div class="story" id="story">${storyHTML(gi,false)}</div>
+    <div class="card fade" id="card">
+      <p class="ctx">${esc(g[2])}</p>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>
+      <div id="fb"></div>
+    </div>
+  </section>`;
+  fitCard();
+  busy=false;
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(busy) return; busy=true;
+    const ok = b.dataset.o===g[4];
+    ans[gi]=ok; picks[gi]=b.dataset.o;
+    app.querySelectorAll('.opt').forEach(x=>{ x.disabled=true; if(x.dataset.o===g[4]) x.classList.add('right'); else if(x===b) x.classList.add('wrong'); });
+    const gap=document.getElementById('gap'); if(gap){ gap.textContent=g[4]; gap.classList.add(ok?'ok':'no'); }
+    const fb=document.getElementById('fb');
+    if(ok){
+      fb.className='fb ok'; fb.innerHTML='<span class="fbl">Верно</span>';
+      timer=setTimeout(advance, 1000);
+    } else {
+      fb.className='fb no';
+      fb.innerHTML=`<span class="fbl">Не совсем</span><p>${esc(g[7])}</p><button class="btn dark" id="nx">Дальше</button>`;
+      const nx=document.getElementById('nx'); nx.focus({preventScroll:true}); nx.onclick=advance; fitCard();
+    }
+  });
+}
+
+function advance(){
+  clearTimeout(timer);
+  track('g'+(gi+1));
+  gi++;
+  if(gi>=G.length){ score(); track('finish'); result(); }
+  else if(gi===HALF){ half(); }
+  else ask();
+}
+
+function half(){
+  window.scrollTo(0,0);
+  app.innerHTML = `<section class="in screen half fade" id="half">
+    ${stripHTML()}
+    <h2 class="d">Половина <span class="hl">позади</span></h2>
+    <p>Осталось ${G.length-HALF} фраз.</p>
+  </section>`;
+  const go=()=>{ clearTimeout(timer); ask(); };
+  document.getElementById('half').onclick=go;
+  timer=setTimeout(go, 1600);
+}
+
+function score(){
+  res=S.map((_,t)=>{ const r=G.map((g,i)=>g[1]===t?ans[i]:null).filter(x=>x!==null); const k=r.filter(Boolean).length; return k===r.length?'g':k===0?'r':'y'; });
+}
+
+function pickType(){
+  const pts=res.map(c=>c==='g'?0:c==='y'?1:2);
+  const sum=(ids)=>ids.reduce((a,i)=>a+pts[i],0);
+  const total=pts.reduce((a,b)=>a+b,0);
+  const reds=res.filter(c=>c==='r').length;
+  if(total<=2) return 'almost';
+  if(reds>=5) return 'pieces';
+  if(sum([0,1,2])>=3) return 'literal';
+  if(sum([4,7,8,9])>=3) return 'tenses';
+  return 'speech';
+}
+
+function message(){
+  const bad=G.map((g,i)=>ans[i]?null:i).filter(i=>i!==null);
+  const n=bad.length, m10=n%10, m100=n%100;
+  const w=(m10===1&&m100!==11)?'ошибка':(m10>=2&&m10<=4&&(m100<12||m100>14))?'ошибки':'ошибок';
+  if(!n) return `Здравствуйте, Артём! Мой результат экспресс-диагностики: без ошибок, ${G.length} из ${G.length}.\n\nПодскажите, пожалуйста, что мне подтянуть дальше?`;
+  let m=`Здравствуйте, Артём! Мой результат экспресс-диагностики: ${n} ${w} из ${G.length}.\n`;
+  bad.forEach((i,k)=>{ m+=`\n${k+1}. ${G[i][3].replace('___','('+picks[i]+')')}`; });
+  m+=`\n\nПодскажите, пожалуйста, с чего мне начать?`;
+  return m;
+}
+
+function result(){
+  const key=pickType(), T=TYPES[key];
+  const msg=message();
+  window.scrollTo(0,0);
+  app.innerHTML = `<section class="in screen res">
+    <div class="rtype fade">
+      <span class="mono">Ваш результат</span>
+      <h1 class="d">${T.h}</h1>
+      <p>${esc(T.p)}</p>
+      <p class="start"><b>С чего начать:</b> ${esc(T.s)}</p>
+    </div>
+    <div style="display:grid;gap:12px">
+      <h2 class="d sect">Результат по темам</h2>
+      <p class="taphint">Нажмите на тему, чтобы узнать, что в ней</p>
+      <div class="map">${S.map((s,i)=>`<button class="tile" data-i="${i}"><span class="n">${s.n}</span><span class="t">${esc(s.t)}</span></button>`).join('')}</div>
+      <div class="legend"><span><i style="background:var(--g)"></i>работает</span><span><i style="background:var(--y)"></i>шатается</span><span><i style="background:var(--r)"></i>дыра</span></div>
+      <div class="tinfo" id="tinfo" aria-live="polite"></div>
+    </div>
+    <div class="course">
+      <p>Каждый блок это урок курса BezUchebnika. На курсе темы выстраиваются в единую систему и вместе дают всю необходимую базу, чтобы уверенно говорить по-английски и понимать других.</p>
+      <a class="btn" id="course" href="${ARTEM}?text=${encodeURIComponent('курс')}" target="_blank" rel="noopener">Спросить у Артёма про курс ↗</a>
+    </div>
+  </section>
+  <section class="cta">
+    <div class="in">
+      <h2 class="d">Хотите личный разбор?</h2>
+      <p>Отправьте мне свой результат. Я посмотрю, какие темы у вас проседают, и подскажу, с чего начать.</p>
+      <a class="btn primary" id="ask" href="${ARTEM}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Получить разбор от Артёма ↗</a>
+      <p class="hint" id="hint" hidden>Если сообщение не появилось в чате, просто вставьте его: оно уже скопировано.</p>
+    </div>
+  </section>
+  <section class="more">
+    <div class="in">
+      <span class="mono">Хотите узнать больше про основы английского?</span>
+      <a class="vid" id="vid" href="${VIDEO}" target="_blank" rel="noopener">
+        <span class="vt">СХЕМА, которая исправит ваш английский</span>
+        <span style="font-size:15px;color:var(--muted)">Видео о том, по какой схеме строится английское предложение и откуда берутся ошибки дословного перевода.</span>
+        <span class="go">Смотреть на YouTube ↗</span>
+      </a>
+      <div class="row">
+        <a class="link" id="tg" href="${CHANNEL}" target="_blank" rel="noopener">Телеграм-канал BezUchebnika ↗</a>
+        <button class="again" id="again">Пройти ещё раз</button>
+      </div>
+    </div>
+  </section>`;
+  const tiles=[...app.querySelectorAll('.map .tile')];
+  tiles.forEach((el,i)=>setTimeout(()=>{
+    el.classList.add(res[i],'pop');
+    const s=document.createElement('span'); s.className='s'; s.textContent=WORD[res[i]]; el.appendChild(s);
+  }, 250+i*120));
+  const info=document.getElementById('tinfo');
+  const show=i=>{ tiles.forEach(t=>t.classList.toggle('sel',+t.dataset.i===i)); const x=S[i];
+    info.innerHTML=`<b>${esc(x.name)}</b> <span class="mono">${x.n} · ${WORD[res[i]]}</span><p>${esc(x.z)}</p>`; };
+  tiles.forEach(t=>t.onclick=()=>{ show(+t.dataset.i); info.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'}); });
+  let first=res.indexOf('r'); if(first<0) first=res.indexOf('y'); if(first<0) first=0; show(first);
+  document.getElementById('ask').onclick=()=>{
+    track('ask');
+    try{ navigator.clipboard.writeText(msg).catch(()=>{}); }catch(e){}
+    document.getElementById('hint').hidden=false;
+  };
+  document.getElementById('vid').onclick=()=>track('video');
+  document.getElementById('course').onclick=()=>track('course');
+  document.getElementById('tg').onclick=()=>track('channel');
+  document.getElementById('again').onclick=()=>{ track('again'); start(); };
+}
+
+start();
+</script>
+<script data-goatcounter="https://bezuchebnika.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+
+</body>
+</html>
